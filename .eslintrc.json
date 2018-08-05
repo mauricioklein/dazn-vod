@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true,
+        "jasmine": true
+    },
+    "plugins": [
+      "filenames"
+    ],
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
+    "rules": {
+        "indent": [
+            "error",
+            2,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "never"
+        ],
+        "no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ],
+        "no-console": "off",
+        "camelcase": [2, { "properties": "always" }],
+        "filenames/match-regex": [2, "^[a-z_.]+$", true]
+    }
+}
