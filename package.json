@@ -4,6 +4,7 @@
   "description": "A simple VoD system written in NodeJS",
   "main": "index.js",
   "scripts": {
+    "prestart": "browserify client/index.js -o public/bundle.js",
     "test": "mocha ./server/test"
   },
   "author": "Mauricio Klein",
