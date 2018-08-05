@@ -5,7 +5,7 @@ const ss = require("socket.io-stream")
 const auth = require("socketio-auth")
 const fs = require("fs")
 const Log = require("log"),
-      log = new Log("info")
+  log = new Log("info")
 
 const pathFor = (file) => (
   `${__dirname}/../../videos/${file}`
