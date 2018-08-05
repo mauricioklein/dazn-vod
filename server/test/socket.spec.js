@@ -3,6 +3,7 @@
 const { expect, assert } = require("chai")
 const redisMock = require("./redis-mock")
 const Storage = require("../src/storage")
+const Socket = require("../src/socket")
 
 const socketIO = require("socket.io-client")
 const ss = require("socket.io-stream")
@@ -10,7 +11,9 @@ const ss = require("socket.io-stream")
 const startServer = (storage) => {
   const app = require("express")()
   const server = require("http").Server(app)
-  const socket = require("../src/socket")(server, storage)
+
+  // Initiates the Socket.io server
+  Socket(server, storage)
 
   server.listen(3000)
 
@@ -21,7 +24,7 @@ describe("Storage", () => {
   const redisConn = redisMock.createClient()
   const storage = new Storage(redisConn)
 
-  let server;
+  let server
 
   beforeEach(() => { server = startServer(storage) })
   afterEach(() => {
@@ -33,7 +36,7 @@ describe("Storage", () => {
     describe("with first authentication for user", () => {
       let client = socketIO("http://localhost:3000")
 
-      after(() => client.disconnect())
+      afterEach(() => client.disconnect())
 
       it("authenticates successfully", (done) => {
         client.emit("authentication", { username: "john" })
@@ -45,8 +48,8 @@ describe("Storage", () => {
     describe("with excessive number of connections", () => {
       const client = socketIO("http://localhost:3000")
 
-      before(() => { redisConn.hincrby("activeConnections", "john", 5) })
-      after(() => { client.disconnect() })
+      beforeEach(() => { redisConn.hincrby("activeConnections", "john", 5) })
+      afterEach(() => { client.disconnect() })
 
       it("is disconnected due too many open connections", (done) => {
         client.emit("authentication", { username: "john" })
@@ -63,7 +66,7 @@ describe("Storage", () => {
     let client = socketIO("http://localhost:3000")
     let stream = ss.createStream()
 
-    after(() => { client.disconnect() })
+    afterEach(() => { client.disconnect() })
 
     it("streams the file", function(done) {
       this.timeout(10000)

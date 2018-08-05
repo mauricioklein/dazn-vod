@@ -24,7 +24,7 @@ describe("Storage", () => {
     })
 
     describe("with user already in Redis", () => {
-      before(() => { redisConn.hincrby(keyName, username, 2) })
+      beforeEach(() => { redisConn.hincrby(keyName, username, 2) })
 
       it("returns 2 active connections", () => {
         storage.activeConnectionsFor(username, (_, value) => {
@@ -48,7 +48,7 @@ describe("Storage", () => {
     })
 
     describe("with user already in Redis", () => {
-      before(() => { redisConn.hincrby(keyName, username, 2) })
+      beforeEach(() => { redisConn.hincrby(keyName, username, 2) })
 
       it("returns 3 active connections", () => {
         storage.incrementConnectionsFor(username)
@@ -63,7 +63,7 @@ describe("Storage", () => {
   describe("#decrementConnectionsFor", () => {
     const username = "john"
 
-    before(() => { redisConn.hincrby(keyName, username, 2) })
+    beforeEach(() => { redisConn.hincrby(keyName, username, 2) })
 
     it("returns 1 active connection", () => {
       storage.decrementConnectionsFor(username)
