@@ -10,16 +10,16 @@
   "author": "Mauricio Klein",
   "license": "MIT",
   "dependencies": {
-    "chai": "^4.1.2",
     "express": "^4.16.3",
     "log": "^1.4.0",
-    "mocha": "^5.2.0",
     "redis": "^2.8.0",
     "socket.io": "^2.1.1",
     "socket.io-stream": "^0.9.1",
     "socketio-auth": "^0.1.1"
   },
   "devDependencies": {
-    "browserify": "^16.2.2"
+    "browserify": "^16.2.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
   }
 }
