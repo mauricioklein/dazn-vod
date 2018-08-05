@@ -17,5 +17,8 @@
     "socket.io": "^2.1.1",
     "socket.io-stream": "^0.9.1",
     "socketio-auth": "^0.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2"
   }
 }
