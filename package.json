@@ -11,6 +11,10 @@
   },
   "author": "Mauricio Klein",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mauricioklein/dazn-vod.git"
+  },
   "dependencies": {
     "express": "^4.16.3",
     "log": "^1.4.0",
