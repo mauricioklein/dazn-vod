@@ -6,6 +6,11 @@ node_js:
 notifications:
   email: false
 
+install:
+  - npm install -g codecov istanbul
+  - npm install
+
 script:
   - npm run lint
   - npm test
+  - codecov

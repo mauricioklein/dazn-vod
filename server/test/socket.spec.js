@@ -1,6 +1,6 @@
 "use strict"
 
-const { expect, assert } = require("chai")
+const { expect } = require("chai")
 const redisMock = require("./redis-mock")
 const Storage = require("../src/storage")
 const Socket = require("../src/socket")
@@ -32,7 +32,7 @@ describe("Storage", () => {
     redisConn.flushall()
   })
 
-  describe("#connection", () => {
+  describe("#authentication", () => {
     describe("with first authentication for user", () => {
       let client = socketIO("http://localhost:3000")
 
@@ -41,7 +41,7 @@ describe("Storage", () => {
       it("authenticates successfully", (done) => {
         client.emit("authentication", { username: "john" })
         client.on("authenticated", () => { done() })
-        client.on("unauthorized", () => { assert.fail() })
+        client.on("unauthorized", () => { done(new Error("Unexpected unauthorized received")) })
       })
     })
 
@@ -53,9 +53,24 @@ describe("Storage", () => {
 
       it("is disconnected due too many open connections", (done) => {
         client.emit("authentication", { username: "john" })
-        client.on("authenticated", () => { assert.fail() })
+        client.on("authenticated", () => { done(new Error("Unexpected authenticated received")) })
         client.on("unauthorized", (error) => {
           expect(error.message).to.equal("Max simultaneous connections reached")
+          done()
+        })
+      })
+    })
+
+    describe("with invalid username", () => {
+      const client = socketIO("http://localhost:3000")
+
+      afterEach(() => { client.disconnect() })
+
+      it("refuses authentication and returns an error", function(done) {
+        client.emit("authentication", { username: null })
+        client.on("authenticated", () => { done(new Error("Unexpected authenticated received")) })
+        client.on("unauthorized", (error) => {
+          expect(error.message).to.equal("Failed to fetch user's active connections")
           done()
         })
       })

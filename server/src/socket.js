@@ -25,9 +25,8 @@ const socket = function(server, storage) {
     authenticate: (socket, data, callback) => {
       storage.activeConnectionsFor(data.username, (err, result) => {
         if(err) {
-          log.error(`Error retrieving active connections for "${data.username}": `, err)
-          callback(new Error("An internal error happened"))
-          return
+          log.error(`Failed to retrieve active connections for "${data.username}": `, err.message)
+          return callback(new Error("Failed to fetch user's active connections"), null)
         }
 
         const activeConnections = parseInt(result)
