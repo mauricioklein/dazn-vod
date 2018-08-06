@@ -4,26 +4,20 @@ const socketIO = require("socket.io")
 const ss = require("socket.io-stream")
 const auth = require("socketio-auth")
 const fs = require("fs")
-const Log = require("log"),
-  log = new Log("info")
 
-const pathFor = (file) => (
-  `${__dirname}/../../videos/${file}`
-)
-
-const socket = function(server, storage) {
+const socket = function(server, userAuth, storageResolver, log) {
   const io = socketIO(server)
 
   io.on("connection", (socket) => {
     ss(socket).on("stream", (stream, file="small.webm") => {
       log.info(`Streaming video "${file}" for user "${socket.client.username}"`)
-      fs.createReadStream(pathFor(file)).pipe(stream)
+      fs.createReadStream(storageResolver(file)).pipe(stream)
     })
   })
 
   auth(io, {
     authenticate: (socket, data, callback) => {
-      storage.activeConnectionsFor(data.username, (err, result) => {
+      userAuth.activeConnectionsFor(data.username, (err, result) => {
         if(err) {
           log.error(`Failed to retrieve active connections for "${data.username}": `, err.message)
           return callback(new Error("Failed to fetch user's active connections"), null)
@@ -42,7 +36,7 @@ const socket = function(server, storage) {
     postAuthenticate: (socket, data) => {
       log.info(`User "${data.username}" connected`)
 
-      storage.incrementConnectionsFor(data.username)
+      userAuth.incrementConnectionsFor(data.username)
       socket.client.username = data.username
     },
     disconnect: (socket) => {
@@ -53,7 +47,7 @@ const socket = function(server, storage) {
 
       log.info(`User "${username}" disconnected`)
 
-      storage.decrementConnectionsFor(username)
+      userAuth.decrementConnectionsFor(username)
     }
   })
 

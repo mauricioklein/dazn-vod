@@ -34,8 +34,9 @@
     socket.on("authenticated", () => {
       const video = createVideoElement()
       const writable = new MediaSourceStream(video, { extname: ".webm" })
+      const mediaFile = "small.webm"
 
-      ss(socket).emit("stream", stream)
+      ss(socket).emit("stream", stream, mediaFile)
       stream.pipe(writable)
     })
 
