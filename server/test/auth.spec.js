@@ -74,13 +74,13 @@ describe("Auth", () => {
     })
   })
 
-  describe("#histogram", () => {
+  describe("#allConnections", () => {
     it("returns the active connections for all users", (done) => {
       redisConn.hincrby(keyName, "peter", 1)
       redisConn.hincrby(keyName, "john", 2)
       redisConn.hincrby(keyName, "paul", 3)
 
-      auth.histogram((_, histogram) => {
+      auth.allConnections((_, histogram) => {
         expect(histogram).to.deep.equal({
           peter: 1,
           john: 2,

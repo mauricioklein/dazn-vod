@@ -54,7 +54,7 @@ http://localhost:3000?username=peter # (authenticates as "peter")
 
 Each user is authorised to hold a maximum of **3 concurrent connections**. In case the user has already 3 open connections and try to open a forth one, the connection is denied and an alert message is present informing that the maximum number of concurrent streams was reached. Closing the browser tab disconnects the user from the system and, thus, remove this connection from the user's quota.
 
-A histogram is available under `http://localhost:[PORT]/histogram`. This route requires no authentication and shows the currently connected users in the system and the respective number of open connections.
+A list of all active connections is available under `http://localhost:[PORT]/connections`. This route requires no authentication and shows the currently connected users in the system and the respective number of open connections.
 
 ## Technical details
 

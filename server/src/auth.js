@@ -19,7 +19,7 @@ class Auth {
     this.conn.hincrby(userConnsHash, username, -1)
   }
 
-  histogram(callback) {
+  allConnections(callback) {
     this.conn.hgetall(userConnsHash, callback)
   }
 }

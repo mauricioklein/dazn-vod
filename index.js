@@ -33,9 +33,9 @@ app.get("/healthz", (_, res) => {
   res.json({ status: "OK" })
 })
 
-// route to histogram of active connections
-app.get("/histogram", (_, res) => {
-  auth.histogram((_, data) => {
+// route to list all active connections at the moment
+app.get("/connections", (_, res) => {
+  auth.allConnections((_, data) => {
     res.json(data)
   })
 })
