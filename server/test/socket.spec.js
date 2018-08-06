@@ -2,31 +2,31 @@
 
 const { expect } = require("chai")
 const redisMock = require("./redis-mock")
-const Storage = require("../src/storage")
+const Auth = require("../src/auth")
 const Socket = require("../src/socket")
 
 const socketIO = require("socket.io-client")
 const ss = require("socket.io-stream")
 
-const startServer = (storage) => {
+const startServer = (auth) => {
   const app = require("express")()
   const server = require("http").Server(app)
 
   // Initiates the Socket.io server
-  Socket(server, storage)
+  Socket(server, auth)
 
   server.listen(3000)
 
   return server
 }
 
-describe("Storage", () => {
+describe("Socket", () => {
   const redisConn = redisMock.createClient()
-  const storage = new Storage(redisConn)
+  const auth = new Auth(redisConn)
 
   let server
 
-  beforeEach(() => { server = startServer(storage) })
+  beforeEach(() => { server = startServer(auth) })
   afterEach(() => {
     server.close()
     redisConn.flushall()
@@ -66,7 +66,7 @@ describe("Storage", () => {
 
       afterEach(() => { client.disconnect() })
 
-      it("refuses authentication and returns an error", function(done) {
+      it("refuses authentication and returns an error", (done) => {
         client.emit("authentication", { username: null })
         client.on("authenticated", () => { done(new Error("Unexpected authenticated received")) })
         client.on("unauthorized", (error) => {
@@ -83,9 +83,7 @@ describe("Storage", () => {
 
     afterEach(() => { client.disconnect() })
 
-    it("streams the file", function(done) {
-      this.timeout(10000)
-
+    it("streams the file", (done) => {
       client.on("authenticated", () => {
         stream.on("data", (data) => {
           expect(String(data)).to.equal("Hello World!\n")

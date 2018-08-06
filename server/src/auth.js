@@ -2,7 +2,7 @@
 
 const userConnsHash = "activeConnections"
 
-class Storage {
+class Auth {
   constructor(conn) {
     this.conn = conn
   }
@@ -24,4 +24,4 @@ class Storage {
   }
 }
 
-module.exports = Storage
+module.exports = Auth

@@ -2,11 +2,11 @@
 
 const { expect } = require("chai")
 const redisMock = require("./redis-mock")
-const Storage = require("../src/storage")
+const Auth = require("../src/auth")
 
-describe("Storage", () => {
+describe("Auth", () => {
   const redisConn = redisMock.createClient()
-  const storage = new Storage(redisConn)
+  const auth = new Auth(redisConn)
 
   const keyName = "activeConnections"
 
@@ -17,7 +17,7 @@ describe("Storage", () => {
 
     describe("with user not yet in Redis", () => {
       it("returns 0 active connections", () => {
-        storage.activeConnectionsFor(username, (_, value) => {
+        auth.activeConnectionsFor(username, (_, value) => {
           expect(value).to.equal(0)
         })
       })
@@ -27,7 +27,7 @@ describe("Storage", () => {
       beforeEach(() => { redisConn.hincrby(keyName, username, 2) })
 
       it("returns 2 active connections", () => {
-        storage.activeConnectionsFor(username, (_, value) => {
+        auth.activeConnectionsFor(username, (_, value) => {
           expect(value).to.equal(2)
         })
       })
@@ -39,7 +39,7 @@ describe("Storage", () => {
 
     describe("with user not yet in Redis", () => {
       it("returns 1 active connection", () => {
-        storage.incrementConnectionsFor(username)
+        auth.incrementConnectionsFor(username)
 
         redisConn.hget(keyName, username, (_, value) => {
           expect(value).to.equal(1)
@@ -51,7 +51,7 @@ describe("Storage", () => {
       beforeEach(() => { redisConn.hincrby(keyName, username, 2) })
 
       it("returns 3 active connections", () => {
-        storage.incrementConnectionsFor(username)
+        auth.incrementConnectionsFor(username)
 
         redisConn.hget(keyName, username, (_, value) => {
           expect(value).to.equal(3)
@@ -66,7 +66,7 @@ describe("Storage", () => {
     beforeEach(() => { redisConn.hincrby(keyName, username, 2) })
 
     it("returns 1 active connection", () => {
-      storage.decrementConnectionsFor(username)
+      auth.decrementConnectionsFor(username)
 
       redisConn.hget(keyName, username, (_, value) => {
         expect(value).to.equal(1)
@@ -80,7 +80,7 @@ describe("Storage", () => {
       redisConn.hincrby(keyName, "john", 2)
       redisConn.hincrby(keyName, "paul", 3)
 
-      storage.histogram((_, histogram) => {
+      auth.histogram((_, histogram) => {
         expect(histogram).to.deep.equal({
           peter: 1,
           john: 2,

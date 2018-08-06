@@ -8,18 +8,18 @@ const Redis = require("redis")
 const app = express()
 const server = http.Server(app)
 
-const Storage = require("./server/src/storage")
+const Auth = require("./server/src/auth")
 const Socket = require("./server/src/socket")
 
 const redisUrl = process.env.REDIS_URL || "127.0.0.1"
 const redisPort = process.env.REDIS_PORT || "6379"
 const port = process.env.PORT || 3000
 
-// create storage
+// create the authentication system
 const redisConn = Redis.createClient({ host: redisUrl, port: redisPort })
-const storage = new Storage(redisConn)
+const auth = new Auth(redisConn)
 
-new Socket(server, storage)
+new Socket(server, auth)
 
 // serve static files on /public folder
 app.use(express.static("public"))
