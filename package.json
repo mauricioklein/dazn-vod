@@ -7,7 +7,7 @@
     "prestart": "browserify client/index.js -o public/bundle.js",
     "dev": "nodemon index.js",
     "lint": "eslint --ignore-pattern 'bundle.js' --ignore-pattern 'coverage/**/*' .",
-    "test": "mocha ./server/test",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec server/test/",
     "start": "node index.js"
   },
   "author": "Mauricio Klein",
@@ -31,6 +31,7 @@
     "chai": "^4.1.2",
     "eslint": "^5.3.0",
     "eslint-plugin-filenames": "^1.3.2",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0"
   }
 }

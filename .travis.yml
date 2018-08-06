@@ -13,4 +13,4 @@ install:
 script:
   - npm run lint
   - npm test
-  - istanbul cover mocha -- -R spec server/test/**/*.js
+  - codecov
