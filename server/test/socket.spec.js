@@ -4,6 +4,7 @@ const { expect } = require("chai")
 const redisMock = require("./redis-mock")
 const Auth = require("../src/auth")
 const Socket = require("../src/socket")
+const { TestStorage } = require("../src/storage")
 
 const socketIO = require("socket.io-client")
 const ss = require("socket.io-stream")
@@ -11,9 +12,10 @@ const ss = require("socket.io-stream")
 const startServer = (auth) => {
   const app = require("express")()
   const server = require("http").Server(app)
+  const storageResolver = new TestStorage()
 
   // Initiates the Socket.io server
-  Socket(server, auth)
+  Socket(server, auth, storageResolver)
 
   server.listen(3000)
 

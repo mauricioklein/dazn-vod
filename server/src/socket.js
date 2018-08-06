@@ -7,17 +7,13 @@ const fs = require("fs")
 const Log = require("log"),
   log = new Log("info")
 
-const pathFor = (file) => (
-  `${__dirname}/../../videos/${file}`
-)
-
-const socket = function(server, userAuth) {
+const socket = function(server, userAuth, storageResolver) {
   const io = socketIO(server)
 
   io.on("connection", (socket) => {
     ss(socket).on("stream", (stream, file="small.webm") => {
       log.info(`Streaming video "${file}" for user "${socket.client.username}"`)
-      fs.createReadStream(pathFor(file)).pipe(stream)
+      fs.createReadStream(storageResolver(file)).pipe(stream)
     })
   })
 

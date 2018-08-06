@@ -10,6 +10,7 @@ const server = http.Server(app)
 
 const Auth = require("./server/src/auth")
 const Socket = require("./server/src/socket")
+const { VideoStorage } = require("./server/src/storage")
 
 const redisUrl = process.env.REDIS_URL || "127.0.0.1"
 const redisPort = process.env.REDIS_PORT || "6379"
@@ -18,8 +19,9 @@ const port = process.env.PORT || 3000
 // create the authentication system
 const redisConn = Redis.createClient({ host: redisUrl, port: redisPort })
 const auth = new Auth(redisConn)
+const storageResolver = new VideoStorage()
 
-new Socket(server, auth)
+new Socket(server, auth, storageResolver)
 
 // serve static files on /public folder
 app.use(express.static("public"))
@@ -31,7 +33,7 @@ app.get("/healthz", (_, res) => {
 
 // route to histogram of active connections
 app.get("/histogram", (_, res) => {
-  storage.histogram((_, data) => {
+  auth.histogram((_, data) => {
     res.json(data)
   })
 })
