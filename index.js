@@ -2,6 +2,7 @@
 
 const express = require("express")
 const http = require("http")
+const Log = require("log")
 
 const Redis = require("redis")
 
@@ -20,8 +21,9 @@ const port = process.env.PORT || 3000
 const redisConn = Redis.createClient({ host: redisUrl, port: redisPort })
 const auth = new Auth(redisConn)
 const storageResolver = new VideoStorage()
+const log = new Log("info")
 
-new Socket(server, auth, storageResolver)
+new Socket(server, auth, storageResolver, log)
 
 // serve static files on /public folder
 app.use(express.static("public"))

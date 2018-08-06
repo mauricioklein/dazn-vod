@@ -4,10 +4,8 @@ const socketIO = require("socket.io")
 const ss = require("socket.io-stream")
 const auth = require("socketio-auth")
 const fs = require("fs")
-const Log = require("log"),
-  log = new Log("info")
 
-const socket = function(server, userAuth, storageResolver) {
+const socket = function(server, userAuth, storageResolver, log) {
   const io = socketIO(server)
 
   io.on("connection", (socket) => {
