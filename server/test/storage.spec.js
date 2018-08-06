@@ -73,4 +73,22 @@ describe("Storage", () => {
       })
     })
   })
+
+  describe("#histogram", () => {
+    it("returns the active connections for all users", (done) => {
+      redisConn.hincrby(keyName, "peter", 1)
+      redisConn.hincrby(keyName, "john", 2)
+      redisConn.hincrby(keyName, "paul", 3)
+
+      storage.histogram((_, histogram) => {
+        expect(histogram).to.deep.equal({
+          peter: 1,
+          john: 2,
+          paul: 3
+        })
+
+        done()
+      })
+    })
+  })
 })
